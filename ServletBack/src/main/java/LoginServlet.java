@@ -21,17 +21,18 @@ public class LoginServlet extends HttpServlet {
             Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/javaassign", "root", "Harshit5582");
 
             Statement statement = conn.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT COUNT(*) AS userCount FROM users WHERE email = '"+email[1]+"' and password = '"+password[1]+"';");
-            resultSet.next();
-            if(resultSet.getInt("userCount") == 0){
+            ResultSet resultSet = statement.executeQuery("SELECT name FROM users WHERE email = '"+email[1]+"' and password = '"+password[1]+"';");
+
+            if(!resultSet.next()){
                 resp.setStatus(404);
                 statement.close();
                 resultSet.close();
                 conn.close();
                 return;
             }
-
+            String name = resultSet.getString("name");
             resp.setStatus(200);
+            resp.getWriter().println(name);
         } catch (SQLException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }finally {
